@@ -24,6 +24,31 @@ public class DemoWait_Notify {
     public static void main(String[] args) {
         //同步使用的锁要保证唯一
         Object obj = new Object();
+
+        //老板线程
+        new Thread(){
+
+            @Override
+            public void run() {
+                System.out.println("开始啦");
+                //保证等待和唤醒只能有一个在运行
+                try {
+                    Thread.sleep(5000);//5s做包子
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (obj){
+                    System.out.println("老板5s之后做好包子,叫醒顾客吃包子");
+                    //调用wait方法,放弃cpu的执行,进入到waiting状态
+                    try {
+                        obj.notify();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }.start();
         //顾客线程
         new Thread(){
 
@@ -40,29 +65,6 @@ public class DemoWait_Notify {
                     }
                     //唤醒之后执行
                     System.out.println("包子做好了,开吃");
-                }
-            }
-        }.start();
-        //老板线程
-        new Thread(){
-
-            @Override
-            public void run() {
-                //保证等待和唤醒只能有一个在运行
-                try {
-                    Thread.sleep(5000);//5s做包子
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                synchronized (obj){
-                    System.out.println("老板5s之后做好包子,叫醒顾客吃包子");
-                    //调用wait方法,放弃cpu的执行,进入到waiting状态
-                    try {
-                        obj.notify();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
                 }
             }
         }.start();
