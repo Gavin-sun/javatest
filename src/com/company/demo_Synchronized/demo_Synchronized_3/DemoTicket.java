@@ -1,4 +1,4 @@
-package com.company.demo_Synchronized_3;
+package com.company.demo_Synchronized.demo_Synchronized_3;
 
 /**
  * @author Gavin
